@@ -89,7 +89,7 @@ def make_line_plot(state_dropdown, start_date, end_date):
     ddf1 = ddf1.reset_index()
 
     Line_fig=px.line(ddf1,x="Ingreso_Month",y="interno", color="depto_establecimiento")
-    Line_fig.update_layout(title='Montly Convicts in selected deparments',paper_bgcolor="#F8F9F9")
+    Line_fig.update_layout(title='Monthly Convicts in selected deparments',paper_bgcolor="#F8F9F9")
 
     return [Line_fig]
 
