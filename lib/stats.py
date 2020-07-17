@@ -33,7 +33,7 @@ ddf=ddf.groupby(['interno','depto_establecimiento','Ingreso_Month']).count().res
 ddf=ddf.groupby(['depto_establecimiento','Ingreso_Month']).count().reset_index()
 
 Line_fig=px.line(ddf,x="Ingreso_Month",y="interno", color="depto_establecimiento")
-Line_fig.update_layout(title='Montly Convicts in selected deparments',paper_bgcolor="#F8F9F9")
+Line_fig.update_layout(title='Monthly Convicts in selected deparments',paper_bgcolor="#F8F9F9")
 
 
 #################################################################################
