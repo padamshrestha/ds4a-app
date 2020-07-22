@@ -23,7 +23,7 @@ from app import app
 # Load map data
 #############################
 # engine = create_engine()
-# df = pd.read_sql(sql='select * from reincidentes', con=engine, parse_dates=['fecha_ingreso'])
+# df = pd.read_sql(sql='select * from reincidentes limit 10000', con=engine, parse_dates=['fecha_ingreso'])
 df = pd.read_csv('data/data_full_preprocessed.csv', parse_dates=['fecha_ingreso'])  #if local > faster loading
 
 with open('data/departamentos.geojson') as geo:

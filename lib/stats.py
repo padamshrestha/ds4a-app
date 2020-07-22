@@ -16,7 +16,7 @@ from sqlalchemy import create_engine
 from app import app
 
 # engine = create_engine()
-# df = pd.read_sql(sql='select * from reincidentes', con=engine, parse_dates=['fecha_ingreso'])
+# df = pd.read_sql(sql='select * from reincidentes limit 10000', con=engine, parse_dates=['fecha_ingreso'])
 df = pd.read_csv('data/data_full_preprocessed.csv', parse_dates=['fecha_ingreso']) #if local > faster loading
 
 ###############################################################
@@ -26,7 +26,8 @@ df = pd.read_csv('data/data_full_preprocessed.csv', parse_dates=['fecha_ingreso'
 df['Ingreso_Month'] = pd.to_datetime(df['fecha_ingreso'].map(lambda x: "{}-{}".format(x.year, x.month)))
 
 #Next, we filter the data by month and selected states
-states=['BOGOTA D.C.', 'ATLANTICO']
+# states=['BOGOTA D.C.', 'ATLANTICO']
+states=df['depto_establecimiento'].unique()
 
 ddf=df[df['depto_establecimiento'].isin(states)]
 ddf=ddf.groupby(['interno','depto_establecimiento','Ingreso_Month']).count().reset_index()
@@ -35,11 +36,22 @@ ddf=ddf.groupby(['depto_establecimiento','Ingreso_Month']).count().reset_index()
 Line_fig=px.line(ddf,x="Ingreso_Month",y="interno", color="depto_establecimiento")
 Line_fig.update_layout(title='Monthly Convicts in selected deparments',paper_bgcolor="#F8F9F9")
 
+scatter_fig=px.line(ddf,x="Ingreso_Month",y="interno", color="depto_establecimiento")
+
 
 #################################################################################
 # Here the layout for the plots to use.
 #################################################################################
 stats=html.Div([ 
+	#Place the different graph components here.
+    dbc.Row([
+        dbc.Col(
+            dcc.Graph(figure=Line_fig, id='Line')
+        )
+    ]),
+	],className="ds4a-body")
+
+scatter=html.Div([
 	#Place the different graph components here.
     dbc.Row([
         dbc.Col(

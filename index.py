@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 #Dash Bootstrap Components
-import dash_bootstrap_components as dbc 
+import dash_bootstrap_components as dbc
 
 #data
 import math
@@ -35,7 +35,7 @@ from lib import title, sidebar, col_map, stats
 
 #PLACE THE COMPONENTS IN THE LAYOUT
 app.layout =html.Div(
-    [ 
+    [
       col_map.map,
       stats.stats,
       title.title,
@@ -44,9 +44,12 @@ app.layout =html.Div(
     className="ds4a-app", #You can also add your own css files by locating them into the assets folder
 )
 
- 
-    
-###############################################   
+colors = {
+    'background': '#111111',
+    'text': '#7FDBFF'
+}
+
+###############################################
 #
 #           APP INTERACTIVITY:
 #
@@ -56,7 +59,7 @@ app.layout =html.Div(
 #Load and modify the data that will be used in the app.
 #################################################################
 # engine = create_engine()
-# df = pd.read_sql(sql='select * from reincidentes', con=engine, parse_dates=['fecha_ingreso'])
+# df = pd.read_sql(sql='select * from reincidentes limit 10000', con=engine, parse_dates=['fecha_ingreso'])
 df = pd.read_csv('data/data_full_preprocessed.csv', parse_dates=['fecha_ingreso']) #if local > faster loading
 
 with open('data/departamentos.geojson') as geo:
@@ -67,7 +70,6 @@ with open('data/states_col.json') as f:
 
 df['depto_abr'] = df['depto_establecimiento'].map(states_dict)
 df['Ingreso_Month'] = pd.to_datetime(df['fecha_ingreso'].map(lambda x: "{}-{}".format(x.year, x.month)))
-
 
 #############################################################
 # SCATTER & LINE PLOT : Add sidebar interaction here
@@ -90,6 +92,7 @@ def make_line_plot(state_dropdown, start_date, end_date):
 
     Line_fig=px.line(ddf1,x="Ingreso_Month",y="interno", color="depto_establecimiento")
     Line_fig.update_layout(title='Monthly Convicts in selected deparments',paper_bgcolor="#F8F9F9")
+    # Line_fig.update_layout(title='Monthly Convicts in selected deparments',paper_bgcolor="#F8F9F9",plot_bgcolor=colors['background'])
 
     return [Line_fig]
 
@@ -117,7 +120,7 @@ def update_map(start_date,end_date):
         geojson=geojson,
         featureidkey="properties.depto_abr",
         zoom=4,
-        mapbox_style="carto-positron", 
+        mapbox_style="carto-positron",
         center={"lat": 4.570868, "lon": -74.2973328},
         color_continuous_scale="Viridis",
         opacity=0.5,
@@ -148,5 +151,5 @@ def click_saver(clickData,state):
 
 
 if __name__ == "__main__":
-    # app.run_server(debug=True)
-    app.run_server(host='0.0.0.0',port=8080)
+    app.run_server(debug=False, port=8080)
+    # app.run_server(host='0.0.0.0',port=8080)
